@@ -1,0 +1,231 @@
+#CONECTANDOSE
+
+mariela@mariela-MN-50:~$ psql
+psql (11.5 (Ubuntu 11.5-1))
+Type "help" for help.
+
+mariela=# CREATE DATABASE pruebamariela;
+CREATE DATABASE
+mariela=# \c pruebamariela;
+You are now connected to database "pruebamariela" as user "mariela".
+
+
+
+#CREANDO TABLAS
+
+pruebamariela=# CREATE TABLE products(
+pruebamariela(# Id_product INT NOT NULL,
+pruebamariela(# Name VARCHAR(30),
+pruebamariela(# Description VARCHAR(100),
+pruebamariela(# Price FLOAT,
+pruebamariela(# PRIMARY KEY(Id_product)
+pruebamariela(# );
+CREATE TABLE
+
+pruebamariela=# CREATE TABLE categories(
+pruebamariela(# Id_product INT NOT NULL,
+pruebamariela(# Category VARCHAR(50),
+pruebamariela(# Description VARCHAR(100),
+pruebamariela(# FOREIGN KEY (Id_product) REFERENCES products(Id_product));
+CREATE TABLE
+
+pruebamariela=# CREATE TABLE bills(
+pruebamariela(# Num_bill VARCHAR(10) NOT NULL,
+pruebamariela(# Id_product INT NOT NULL,
+pruebamariela(# Date_bill DATE,
+pruebamariela(# Subtotal FLOAT,
+pruebamariela(# Taxes FLOAT,
+pruebamariela(# Total FLOAT,
+pruebamariela(# PRIMARY KEY(Num_bill),
+pruebamariela(# FOREIGN KEY (Id_product) REFERENCES products(Id_product));
+CREATE TABLE
+
+pruebamariela=# CREATE TABLE customers( 
+pruebamariela(# Num_bill VARCHAR(10) NOT NULL,
+pruebamariela(# Name VARCHAR(50),
+pruebamariela(# Rut VARCHAR(20),
+pruebamariela(# Address VARCHAR(100),
+pruebamariela(# FOREIGN KEY (Num_bill) REFERENCES bills(Num_bill));
+CREATE TABLE
+
+
+
+
+
+#COMPROBANDO
+
+pruebamariela=# \dt
+           List of relations
+ Schema |    Name    | Type  |  Owner  
+--------+------------+-------+---------
+ public | bills      | table | mariela
+ public | categories | table | mariela
+ public | customers  | table | mariela
+ public | products   | table | mariela
+(4 rows)
+
+
+
+
+#AÑADIENDO DATA
+
+pruebamariela=# INSERT INTO products (Id_product, Name, Description, Price) VALUES ('122', 'Brush', 'Wood stick and horse hair' , '10000') , ('123', 'Oil paint blue', 'Oil paint blue color','5000') , ('124', 'Oil paint red', 'Set 6 oils color red', '20000') , ('125', 'Crayons big', 'Set 20 pieces crayons' ,'15000') , ('126', 'Crayons large', 'Set 40 pieces crayons', '25000') , ('127', 'Watercolors', 'Set primary colors' , '10000') , ('128', 'Watercolors large', 'Set 25 colors', '20000') , ('129', 'Paper white 200g', 'Letter size white paper 200g' , '5000');
+INSERT 0 8
+
+pruebamariela=# SELECT * FROM products;
+ id_product |       name        |         description          | price 
+------------+-------------------+------------------------------+-------
+        122 | Brush             | Wood stick and horse hair    | 10000
+        123 | Oil paint blue    | Oil paint blue color         |  5000
+        124 | Oil paint red     | Set 6 oils color red         | 20000
+        125 | Crayons big       | Set 20 pieces crayons        | 15000
+        126 | Crayons large     | Set 40 pieces crayons        | 25000
+        127 | Watercolors       | Set primary colors           | 10000
+        128 | Watercolors large | Set 25 colors                | 20000
+        129 | Paper white 200g  | Letter size white paper 200g |  5000
+(8 rows)
+
+
+
+pruebamariela=# INSERT INTO categories (Id_product, Category, Description) VALUES ('122', 'Brushes', 'All materials and sizes included') , ('123' , 'Paint', 'Water and oil foundation paints') , ('124' , 'Paint', 'Water and oil foundation paints') , ('127' , 'Paint', 'Water and oil foundation paints') , ('128' , 'Paint', 'Water and oil foundation paints') , ('125' , 'Paint stick', 'Paint stick of colored wax') , ('126' , 'Paint stick', 'Paint stick of colored wax'), ('129', 'All sizes papers', 'All textures and sizes included');
+INSERT 0 8
+pruebamariela=# SELECT * FROM categories; 
+ id_product |     category     |           description            
+------------+------------------+----------------------------------
+        122 | Brushes          | All materials and sizes included
+        123 | Paint            | Water and oil foundation paints
+        124 | Paint            | Water and oil foundation paints
+        127 | Paint            | Water and oil foundation paints
+        128 | Paint            | Water and oil foundation paints
+        125 | Paint stick      | Paint stick of colored wax
+        126 | Paint stick      | Paint stick of colored wax
+        129 | All sizes papers | All textures and sizes included
+(8 rows)
+
+
+pruebamariela= #INSERT INTO bills (Num_bill, Id_product, Date_bill, Subtotal, Taxes, Total) VALUES ('1','122', '2020-01-01', '10000', '1000', '11000') , ('2','123', '2020-02-02', '5000', '500', '5500') , ('3','124', '2020-01-01', '20000', '2000', '2200') , ('4','125', '2020-01-01', '15000', '5000', '15000'), ('5','126', '2020-01-01', '25000', '2500', '27500') , ('6','127', '2020-01-01', '10000', '1000', '11000') , ('7','128', '2020-01-01', '20000', '2000', '22000') , ('8','129', '2020-01-01', '5000', '500', '5500') ;
+
+pruebamariela=# SELECT * FROM bills;
+ num_bill | id_product | date_bill  | subtotal | taxes | total 
+----------+------------+------------+----------+-------+-------
+ 1        |        122 | 2020-01-01 |       10 |  1000 | 11000
+ 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 8        |        129 | 2020-01-01 |     5000 |   500 |  5500
+(8 rows)
+
+
+pruebamariela=# INSERT INTO customers (Num_bill, Name, Rut, Address) VALUES ('1','Maria Magdalena', '28.199.323-8', 'La calle invisible, casa 0'), ('2', 'Pepito Ramirez', '7.199.423-4', 'Avenida 123, casa 456') , ('3', 'Jesus Perez', '9.194.323-4', 'Avenida Azul, casa verde') , ('4', 'Maria Rodriguez', '12.123.387-1', 'Edificio gris, casa rosada') , ('5', 'Comercial inventado', '10.014.343-k', 'La calle invisible, oficina 0');
+INSERT 0 5
+
+pruebamariela=# SELECT * FROM customers;
+ num_bill |        name         |     rut      |            address            
+----------+---------------------+--------------+-------------------------------
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0
+(5 rows)
+
+
+
+
+
+#CONSULTAS
+
+
+QUIEN REALIZO LA COMPRA MAS CARA
+
+pruebamariela=# SELECT * FROM bills ORDER BY Total ASC;
+ num_bill | id_product | date_bill  | subtotal | taxes | total 
+----------+------------+------------+----------+-------+-------
+ 1        |        122 | 2020-01-01 |       10 |  1000 |    11
+ 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 8        |        129 | 2020-01-01 |     5000 |   500 |  5500
+ 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+(8 rows)
+
+
+
+
+
+QUIEN PAGO SOBRE 100 DE MONTO
+
+pruebamariela=# SELECT * FROM customers JOIN bills ON bills.Total >100;
+ num_bill |        name         |     rut      |            address            | num_bill | id_product | date_bill  | subtotal | taxes | total
+ 
+----------+---------------------+--------------+-------------------------------+----------+------------+------------+----------+-------+------
+-
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 2        |        123 | 2020-02-02 |     5000 |   500 |  5500
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 3        |        124 | 2020-01-01 |    20000 |  2000 |  2200
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 4        |        125 | 2020-01-01 |    15000 |  5000 | 15000
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 5        |        126 | 2020-01-01 |    25000 |  2500 | 27500
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 7        |        128 | 2020-01-01 |    20000 |  2000 | 22000
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 8        |        129 | 2020-01-01 |     5000 |   500 |  5500
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 8        |        129 | 2020-01-01 |     5000 |   500 |  5500
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 8        |        129 | 2020-01-01 |     5000 |   500 |  5500
+:
+
+
+CUANTOS CLIENTES HAN COMPRADO EL PRODUCTO 6 (para mi el producto 6 es = 127 Watercolors)
+ 
+pruebamariela=# SELECT * FROM customers RIGHT JOIN bills ON customers.Name = customers.Name WHERE bills.Id_product = '127';
+ num_bill |        name         |     rut      |            address            | num_bill | id_product | date_bill  | subtotal | taxes | total 
+----------+---------------------+--------------+-------------------------------+----------+------------+------------+----------+-------+-------
+ 1        | Maria Magdalena     | 28.199.323-8 | La calle invisible, casa 0    | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 2        | Pepito Ramirez      | 7.199.423-4  | Avenida 123, casa 456         | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 3        | Jesus Perez         | 9.194.323-4  | Avenida Azul, casa verde      | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 4        | Maria Rodriguez     | 12.123.387-1 | Edificio gris, casa rosada    | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+ 5        | Comercial inventado | 10.014.343-k | La calle invisible, oficina 0 | 6        |        127 | 2020-01-01 |    10000 |  1000 | 11000
+(5 rows)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
